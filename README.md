@@ -31,10 +31,7 @@ pip install -r requirements.txt
 To use the website, it needs a "brain" (a trained model) to identify images. You have two options:
 
 **Option A: The Quick Way (For Testing the Website)**
-Run this command to create a temporary dummy model so you can instantly see how the website looks:
-```bash
-python generate_dummy_model.py
-```
+You don't need to do anything! The app comes with a built-in fallback. If no trained model is found, the website will still run and provide simulated predictions so you can test the user interface instantly.
 
 **Option B: The Real Way (For Actual Image Detection)**
 1. Download the [CIFAKE Dataset from Kaggle](https://www.kaggle.com/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images).
