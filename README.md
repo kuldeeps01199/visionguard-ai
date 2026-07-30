@@ -10,6 +10,24 @@ Welcome to VisionGuard AI! This tool helps you upload an image and quickly tells
 
 ---
 
+## 📂 Project Structure
+
+```text
+visionguard-ai/
+├── dataset/                  # Contains the CIFAKE dataset (train/test folders)
+├── static/                   # CSS, JS, and image assets for the website
+├── templates/                # HTML files (index.html)
+├── .gitignore                # Git ignore rules
+├── app.py                    # The main Flask web application
+├── cifake_model.onnx         # The compiled, ultra-fast ONNX model for inference
+├── evaluate_model.py         # Script to evaluate model accuracy on test data
+├── requirements.txt          # Python dependencies required to run the project
+├── train.py                  # Script to build, train, and convert the Custom CNN
+└── README.md                 # Project documentation
+```
+
+---
+
 ## 🛠️ How to Run Locally
 
 1. **Get the Code:**
