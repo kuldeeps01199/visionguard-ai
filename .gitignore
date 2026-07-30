@@ -15,8 +15,8 @@ venv.bak/
 .flaskenv
 
 # Trained Models (commented out so you can upload your trained model)
-# *.keras
-# *.h5
+*.keras
+*.h5
 
 # Dataset
 dataset/

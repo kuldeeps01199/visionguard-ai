@@ -5,38 +5,29 @@ from flask import Flask, request, jsonify, render_template
 from PIL import Image
 from werkzeug.utils import secure_filename
 
-# Optional: Disable TF oneDNN warnings if any
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 try:
-    import tensorflow as tf
-    # Limit threads to save RAM on free tiers
-    tf.config.threading.set_intra_op_parallelism_threads(1)
-    tf.config.threading.set_inter_op_parallelism_threads(1)
-    
-    from tensorflow.keras.models import load_model
-    from tensorflow.keras.preprocessing.image import img_to_array
-    TF_AVAILABLE = True
+    import onnxruntime as ort
+    ONNX_AVAILABLE = True
 except ImportError:
-    TF_AVAILABLE = False
+    ONNX_AVAILABLE = False
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max size
 
-MODEL_PATH = "cifake_model.keras"
+MODEL_PATH = "cifake_model.onnx"
 model = None
 
 def load_ml_model():
     global model
-    if TF_AVAILABLE and os.path.exists(MODEL_PATH):
+    if ONNX_AVAILABLE and os.path.exists(MODEL_PATH):
         try:
-            model = load_model(MODEL_PATH)
+            model = ort.InferenceSession(MODEL_PATH)
             print(f"Model loaded successfully from {MODEL_PATH}")
         except Exception as e:
             print(f"Error loading model: {e}")
             model = None
     else:
-        print("Model file not found or TensorFlow not installed.")
+        print("Model file not found or onnxruntime not installed.")
 
 # Try to load model at startup
 load_ml_model()
@@ -47,8 +38,8 @@ def prepare_image(image, target_size=(32, 32)):
         image = image.convert("RGB")
     # Resize the image
     image = image.resize(target_size)
-    # Convert to array and scale to [0, 1] as MobileNetV2 / custom CNN usually expects
-    img_array = img_to_array(image)
+    # Convert to array and scale to [0, 1]
+    img_array = np.array(image, dtype=np.float32)
     img_array = img_array / 255.0
     # Expand dimensions to create a batch of 1
     img_array = np.expand_dims(img_array, axis=0)
@@ -73,8 +64,7 @@ def predict():
         image = Image.open(io.BytesIO(image_bytes))
         
         if model is None:
-            # Fallback if model isn't loaded (e.g. dummy environment without TF)
-            # Return a random result just for UI testing
+            # Fallback if model isn't loaded
             import random
             is_fake = random.choice([True, False])
             confidence = round(random.uniform(50.0, 99.9), 2)
@@ -88,13 +78,12 @@ def predict():
         # Preprocess and predict
         processed_image = prepare_image(image, target_size=(32, 32))
         
-        # Make prediction
-        prediction = model.predict(processed_image)[0][0]
+        # Make prediction using ONNX
+        input_name = model.get_inputs()[0].name
+        output = model.run(None, {input_name: processed_image})
+        prediction = output[0][0][0]
         
-        # In CIFAKE, let's assume 0 = Fake, 1 = Real (or vice versa depending on training)
-        # Assuming training labels: 0 -> FAKE, 1 -> REAL
-        # Wait, standard is 0 for FAKE, 1 for REAL or vice versa. 
-        # For this script, we'll assume > 0.5 is Real, < 0.5 is AI Generated.
+        # Binary classification logic
         if prediction > 0.5:
             result = "Real Image"
             confidence = prediction * 100
