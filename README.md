@@ -51,7 +51,24 @@ Now, open your web browser and go to **`http://localhost:5000`** to use the app!
 ---
 
 ## 🌍 How to put it on the Internet
-If you want to share your website with others, you can host it for free using Render:
+
+Because AI models and TensorFlow are very large, standard free hosting platforms (like Render or Heroku) are often too slow or run out of memory. 
+
+**The best free host for this project is [Hugging Face Spaces](https://huggingface.co/spaces)**. They give you a massive 16GB of RAM for free, which handles TensorFlow perfectly.
+
+### Deploying to Hugging Face Spaces (Recommended & Free)
+1. Create a free account at [Hugging Face](https://huggingface.co/).
+2. Click on your profile picture in the top right and select **New Space**.
+3. Name your space (e.g., `visionguard-ai`).
+4. Choose **Docker** as the Space SDK, and select **Blank** template.
+5. Click **Create Space**.
+6. Follow their instructions to connect your GitHub repository or simply upload all your files (including `Dockerfile`, `app.py`, `requirements.txt`, etc.) directly into the Space's file browser.
+7. Hugging Face will automatically build your Docker container and start your app instantly with 16GB of free RAM!
+
+---
+
+### Deploying to Render (Alternative)
+If you want to host your website using Render:
 1. Make an account on [Render.com](https://render.com/).
 2. Click **New +** and choose **Web Service**.
 3. Connect your GitHub account and select this project.
