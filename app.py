@@ -9,6 +9,11 @@ from werkzeug.utils import secure_filename
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 try:
+    import tensorflow as tf
+    # Limit threads to save RAM on free tiers
+    tf.config.threading.set_intra_op_parallelism_threads(1)
+    tf.config.threading.set_inter_op_parallelism_threads(1)
+    
     from tensorflow.keras.models import load_model
     from tensorflow.keras.preprocessing.image import img_to_array
     TF_AVAILABLE = True
