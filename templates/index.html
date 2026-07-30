@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionGuard AI</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    
+    <main class="container">
+        <header>
+            <h1 class="gradient-text">VisionGuard AI</h1>
+            <p class="subtitle">Upload an image to determine if it is <span class="highlight-real">Real</span> or <span class="highlight-fake">AI-Generated</span>.</p>
+        </header>
+
+        <section class="upload-section">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content" id="drop-zone-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <p>Drag & Drop your image here</p>
+                    <span class="or-divider">or</span>
+                    <button class="btn-primary" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                </div>
+                
+                <div class="preview-container" id="preview-container" style="display: none;">
+                    <img id="image-preview" src="" alt="Image Preview">
+                    <button class="btn-secondary" id="reset-btn">Remove Image</button>
+                </div>
+            </div>
+            
+            <button class="btn-scan" id="scan-btn" disabled>
+                <span class="btn-text">Analyze Image</span>
+                <span class="loader" id="btn-loader" style="display:none;"></span>
+            </button>
+        </section>
+
+        <section class="result-section" id="result-section" style="display: none;">
+            <div class="result-card">
+                <h2 id="result-title">Result</h2>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidence-fill"></div>
+                </div>
+                <p class="confidence-text">Confidence: <span id="confidence-value">0</span>%</p>
+                <p id="warning-text" class="warning-text"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built with <span class="heart">❤</span> | Powered by CIFAKE Dataset & MobileNetV2</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

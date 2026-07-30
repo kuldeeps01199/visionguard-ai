@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables
+.env
+.flaskenv
+
+# Trained Models (commented out so you can upload your trained model)
+# *.keras
+# *.h5
+
+# Dataset
+dataset/
+*.zip
+*.tar.gz
